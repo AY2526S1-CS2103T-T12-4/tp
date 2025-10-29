@@ -121,7 +121,14 @@ class JsonAdaptedPerson {
         if (id == null || id.isEmpty()) {
             return new Person(modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
         } else {
-            final PersonId modelId = new PersonId(id);
+            PersonId modelId;
+            try {
+                modelId = new PersonId(id);
+            } catch (IllegalArgumentException e) {
+                // If the ID in JSON is invalid, generate a new one instead of crashing
+                System.err.println("Warning: Invalid PersonId '" + id + "' found in JSON. Generating new ID.");
+                modelId = new PersonId();
+            }
             return new Person(modelId, modelName, modelPhone, modelEmail, modelWebsite, modelTags, modelBudget);
         }
     }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.exceptions.DataCorruptionException;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.FileUtil;
@@ -47,6 +48,18 @@ public class JsonAddressBookStorage implements AddressBookStorage {
 
         logger.info("Reading AddressBook data from " + filePath);
 
+        // Check data integrity before loading
+        try {
+            if (!DataIntegrityChecker.verifyIntegrity(filePath)) {
+                throw new DataLoadingException(new DataCorruptionException(
+                    "Data file has been modified externally. "
+                    + "Please restore from backup or delete the file to reset the application. "
+                    + "Manual editing of data files is not supported and may cause data corruption."));
+            }
+        } catch (IOException e) {
+            logger.warning("Unable to verify data integrity: " + e.getMessage());
+        }
+
         Optional<JsonSerializableAddressBook> jsonAddressBook = JsonUtil.readJsonFile(
                 filePath, JsonSerializableAddressBook.class);
         if (jsonAddressBook.isEmpty()) {
@@ -82,6 +95,9 @@ public class JsonAddressBookStorage implements AddressBookStorage {
         FileUtil.createIfMissing(filePath);
         JsonUtil.saveJsonFile(new JsonSerializableAddressBook(addressBook), filePath);
         logger.info("Saved AddressBook to " + filePath);
+
+        // Generate new checksum after saving
+        DataIntegrityChecker.generateChecksum(filePath);
     }
 
 }

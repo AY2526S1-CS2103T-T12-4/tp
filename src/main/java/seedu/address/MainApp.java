@@ -85,12 +85,39 @@ public class MainApp extends Application {
             }
             initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
         } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AbsoluteSin-Ema.");
-            initialData = new AddressBook();
+            // Check if this is a data corruption exception
+            if (e.getCause() instanceof seedu.address.commons.exceptions.DataCorruptionException) {
+                logger.severe("Data corruption detected: " + e.getMessage());
+                // Show error dialog and exit application
+                showDataCorruptionError(e.getMessage());
+                System.exit(1);
+                return null; // This line will never be reached, but needed for compilation
+            } else {
+                logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
+                        + " Will be starting with an empty AbsoluteSin-Ema.");
+                initialData = new AddressBook();
+            }
         }
 
         return new ModelManager(initialData, userPrefs);
+    }
+
+    /**
+     * Shows a data corruption error message to the user.
+     */
+    private void showDataCorruptionError(String message) {
+        System.err.println("\n" + "=".repeat(80));
+        System.err.println("DATA CORRUPTION DETECTED");
+        System.err.println("=".repeat(80));
+        System.err.println("\nERROR: " + message);
+        System.err.println("\nThe application cannot start because the data file has been modified externally.");
+        System.err.println("\nTo fix this issue, you can:");
+        System.err.println("1. Restore the data file from a backup");
+        System.err.println("2. Delete the data file to start fresh (all data will be lost)");
+        System.err.println("3. Contact support if you need help recovering your data");
+        System.err.println("\nData file location: " + storage.getAddressBookFilePath());
+        System.err.println("Checksum file location: " + storage.getAddressBookFilePath() + ".checksum");
+        System.err.println("\n" + "=".repeat(80));
     }
 
     private void initLogging(Config config) {

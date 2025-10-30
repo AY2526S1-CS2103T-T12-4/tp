@@ -33,7 +33,8 @@ public class DataIntegrityChecker {
             byte[] fileContent = Files.readAllBytes(filePath);
             String checksum = calculateChecksum(fileContent);
             Path checksumPath = getChecksumPath(filePath);
-            Files.writeString(checksumPath, checksum);
+            // Add newline to comply with repository EOF requirements
+            Files.writeString(checksumPath, checksum + "\n");
             logger.info("Generated checksum for " + filePath);
         } catch (NoSuchAlgorithmException e) {
             logger.warning("Unable to generate checksum: " + e.getMessage());

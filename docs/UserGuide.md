@@ -20,7 +20,7 @@ AbsolutSin-ema is designed for **party planners who manage multiple contacts and
 - Handle **20+ contacts per event** and want instant access
 - Value **organized, searchable contact databases** over phone scrolling
 
-**<div markdown="block" class="alert alert-info">📝 Note on Terminology:**
+<div markdown="block" class="alert alert-info">📝 Note on Terminology:
 
 In AbsolutSin-ema, **"vendor"**, **"contact"**, **"person"**, and **"supplier"** all refer to the same thing - the people/businesses you work with for events. Whether it's a DJ, caterer, florist, or guest, they're all stored as "contacts" in the system.
 
@@ -382,7 +382,7 @@ Format: `undo`
 Only one level of undo is supported. You can only undo the most recent command. You cannot undo an undo command (i.e., there is no redo functionality).
 </div>
 
-**<div markdown="span" class="alert alert-warning"> ⚠️ Important:**
+<div markdown="span" class="alert alert-warning"> ⚠️ Important:
 Commands like `find`, `list`, `help`, and `exit` do not modify data and therefore cannot be undone. The undo command will only affect the most recent command that actually changed your contacts or parties.
 </div>
 
@@ -405,7 +405,7 @@ AbsolutSin-ema data are saved in the hard disk automatically after any command t
 
 AbsolutSin-ema data are saved automatically as a JSON file `[JAR file location]/data/absolutsinema.json`. Advanced users are welcome to update data directly by editing that data file.
 
-**<div markdown="span" class="alert alert-warning"> ⚠️ Caution:**
+<div markdown="span" class="alert alert-warning"> ⚠️ Caution:
 If your changes to the data file makes its format invalid, or the value inputted is invalid, AbsolutSin-ema will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
 Edit the data file only if you are confident that you can update it correctly.
 </div>
